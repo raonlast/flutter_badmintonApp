@@ -33,38 +33,105 @@ class _ScoreBoardState extends State<ScoreBoard> {
   @override
   Widget build(BuildContext context) {
     //반응형
-    // double width = MediaQuery.of(context).size.height;
+    final deviceWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      color: Colors.grey,
-      child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            color: Colors.black,
-            width: 100,
-            height: 100,
-          ),
-          Container(
-            color: Colors.blue,
-            width: 70,
-            height: 70,
-          ),
-          Container(
-            color: Colors.green,
-            width: 70,
-            height: 70,
-          ),
-          Container(
-            color: Colors.purple,
-            width: 100,
-            height: 100,
-            // margin: const EdgeInsets.only(left: 10),
-          ),
-        ],
-      ),
-    );
+        color: Colors.grey,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Card(
+                      color: Colors.black,
+                      elevation: 6.0,
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  print("white clicked");
+                                },
+                                child: Container(
+                                  width: 180,
+                                  height: 270,
+                                  //투명색
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  print("blue clicked");
+                                },
+                                child: Container(
+                                  width: 180,
+                                  height: 135,
+                                  //투명색
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      )
+                      // margin: const EdgeInsets.only(left: 10),
+                      ),
+                  Card(
+                      color: Colors.black,
+                      elevation: 6.0,
+                      child: SizedBox(
+                        width: 90,
+                        height: 135,
+                        child: Center(
+                          child: Text(
+                            "2",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 90,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )),
+                  Card(
+                    color: Colors.black,
+                    elevation: 6.0,
+                    child: SizedBox(
+                      width: 90,
+                      height: 135,
+                      child: Center(
+                        child: Text(
+                          "3",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 90,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    color: Colors.black,
+                    elevation: 6.0,
+                    child: SizedBox(
+                        width: 180,
+                        height: 270,
+                        child: Center(
+                          child: Text("12",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 150,
+                                  fontWeight: FontWeight.bold)),
+                        )),
+                  ),
+                ],
+                // margin: const EdgeInsets.only(left: 10),
+              ),
+            ]));
   }
 }
