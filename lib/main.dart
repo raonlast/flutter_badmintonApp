@@ -44,6 +44,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
           });
         } else {
           setState(() {
+            _gamesCounter("left", "incre");
             _leftPointScore = 0;
           });
         }
@@ -66,6 +67,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
           });
         } else {
           setState(() {
+            _gamesCounter("right", "incre");
             _rightPointScore = 0;
           });
         }
@@ -89,6 +91,8 @@ class _ScoreBoardState extends State<ScoreBoard> {
         if (_leftGamesScore < 3) {
           setState(() {
             _leftGamesScore++;
+            _leftPointScore = 0;
+            _rightPointScore = 0;
           });
         } else {
           setState(() {
@@ -111,6 +115,8 @@ class _ScoreBoardState extends State<ScoreBoard> {
         if (_rightGamesScore < 3) {
           setState(() {
             _rightGamesScore++;
+            _rightPointScore = 0;
+            _leftPointScore = 0;
           });
         } else {
           setState(() {
