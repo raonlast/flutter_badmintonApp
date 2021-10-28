@@ -83,7 +83,53 @@ class _ScoreBoardState extends State<ScoreBoard> {
     }
   }
 
-  void _gamesCounter(String team, String state) {}
+  void _gamesCounter(String team, String state) {
+    if (team == "left") {
+      if (state == "incre") {
+        if (_leftGamesScore < 3) {
+          setState(() {
+            _leftGamesScore++;
+          });
+        } else {
+          setState(() {
+            _leftGamesScore = 0;
+          });
+        }
+      } else if (state == "decre") {
+        if (_leftGamesScore > 0) {
+          setState(() {
+            _leftGamesScore--;
+          });
+        } else {
+          setState(() {
+            _leftGamesScore = 3;
+          });
+        }
+      }
+    } else if (team == "right") {
+      if (state == "incre") {
+        if (_rightGamesScore < 3) {
+          setState(() {
+            _rightGamesScore++;
+          });
+        } else {
+          setState(() {
+            _rightGamesScore = 0;
+          });
+        }
+      } else if (state == "decre") {
+        if (_rightGamesScore > 0) {
+          setState(() {
+            _rightGamesScore--;
+          });
+        } else {
+          setState(() {
+            _rightGamesScore = 3;
+          });
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,40 +194,96 @@ class _ScoreBoardState extends State<ScoreBoard> {
                       )
                       // margin: const EdgeInsets.only(left: 10),
                       ),
-                  const Card(
+                  Card(
                       color: Colors.black,
                       elevation: 6.0,
                       child: SizedBox(
-                        width: 90,
-                        height: 135,
-                        child: Center(
-                          child: Text(
-                            "2",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 90,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      )),
-                  const Card(
+                          width: 90,
+                          height: 135,
+                          child: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      _gamesCounter("left", "decre");
+                                    },
+                                    child: Container(
+                                      width: 90,
+                                      height: 135,
+                                      color: Colors.transparent,
+                                      child: Center(
+                                        child: Text(
+                                          '$_leftGamesScore',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontSize: 90,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _gamesCounter("left", "incre");
+                                    },
+                                    child: Container(
+                                      width: 90,
+                                      height: 67.5,
+                                      color: Colors.transparent,
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ))),
+                  Card(
                     color: Colors.black,
                     elevation: 6.0,
                     child: SizedBox(
-                      width: 90,
-                      height: 135,
-                      child: Center(
-                        child: Text(
-                          "3",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 90,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
+                        width: 90,
+                        height: 135,
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    _gamesCounter("right", "decre");
+                                  },
+                                  child: Container(
+                                    width: 90,
+                                    height: 135,
+                                    color: Colors.transparent,
+                                    child: Center(
+                                      child: Text(
+                                        '$_rightGamesScore',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 90,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _gamesCounter("right", "incre");
+                                  },
+                                  child: Container(
+                                    width: 90,
+                                    height: 67.5,
+                                    color: Colors.transparent,
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        )),
                   ),
                   Card(
                     color: Colors.black,
