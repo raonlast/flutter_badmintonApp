@@ -119,7 +119,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     //반응형
     // final deviceWidth = MediaQuery.of(context).size.width;
 
