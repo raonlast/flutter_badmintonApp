@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/login_page.dart';
 import 'package:flutter_application_1/providers/gameCounter.dart';
 import 'package:flutter_application_1/providers/gameSetting.dart';
-import 'package:flutter_application_1/score_board.dart';
-import 'package:flutter_application_1/setting_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -23,53 +22,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays([]);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.black,
       ),
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.grey,
-        child: SettingPage(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.navigate_next),
-        backgroundColor: Colors.black,
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => Board()));
-        },
-      ),
-    );
-  }
-}
-
-class Board extends StatelessWidget {
-  Board({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.grey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ScoreBoard(),
-          ],
-        ),
-      ),
-    );
-  }
-}

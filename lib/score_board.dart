@@ -14,8 +14,8 @@ class ScoreBoard extends StatefulWidget {
 class _ScoreBoardState extends State<ScoreBoard> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    // SystemChrome.setPreferredOrientations(
+    //     [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     //반응형
     // final deviceWidth = MediaQuery.of(context).size.width;
     // print(Provider.of<GameSetting>(context).getScore);
