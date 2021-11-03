@@ -28,10 +28,10 @@ class _ScoreBoardState extends State<ScoreBoard> {
 
     //최대 점수가 되었을 때
     // point가 over되었을 때 바로 끝나지 않는 이슈 발견
-    if (leftPoint == maxPoint) {
-      context.read<GameCounter>().increScore("left");
-      context.read<GameCounter>().clearPoint("left");
-    }
+    // if (leftPoint == maxPoint) {
+    //   context.read<GameCounter>().increScore("left");
+    //   context.read<GameCounter>().clearPoint("left");
+    // }
     if (rightPoint == maxPoint) {
       context.read<GameCounter>().increScore("right");
       context.read<GameCounter>().clearPoint("right");
@@ -129,7 +129,12 @@ class _ScoreBoardState extends State<ScoreBoard> {
                       GestureDetector(
                         onTap: () {
                           // _pointCounter("left", "incre");
+                          // 이런식으로 진행해야함
                           context.read<GameCounter>().increPoint("left");
+                          if (leftPoint == maxPoint) {
+                            context.read<GameCounter>().increScore("left");
+                            context.read<GameCounter>().clearPoint("left");
+                          }
                         },
                         child: Container(
                           width: 180,
