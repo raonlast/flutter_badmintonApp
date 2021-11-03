@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/providers/gameSetting.dart';
 import 'package:flutter_application_1/score_board.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -10,180 +12,117 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  // String dropdownValue = '1';
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  // String inputMaxPoint = "";
-  // String inputMaxScore = "";
-  final inputMaxPoint = TextEditingController();
-  final inputMaxScore = TextEditingController();
-
-  // var _selectecSetScore = 1;
-  // final _setScore = <int>[1, 2, 3, 4, 5];
+  int maxScore = 0;
+  int maxPoint = 0;
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    //앱을 실행시킨 기기의 width & height
-    final deviceWidth = MediaQuery.of(context).size.width;
-    final deviceHeight = MediaQuery.of(context).size.height;
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Match Setting"),
-      ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Row(
-              //   children: [
-              //     Icon(
-              //       Icons.remove,
-              //       color: Colors.blue,
-              //       size: 20,
-              //     )
-              //   ],
-              // ),
+    // print(context.read<GameSetting>().getScore);
+    // print(Provider.of<GameSetting>(context).getScore);
 
-              Container(
-                width: deviceWidth * 0.8,
-                margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Point Setting",
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+                icon: Icon(Icons.add_circle_outlined),
+                iconSize: 50,
+                onPressed: () {
+                  context.read<GameSetting>().increMaxScore();
+                }),
+            Row(
+              children: [
+                Card(
+                  color: Colors.white,
+                  elevation: 6.0,
+                  child: SizedBox(
+                    width: 120,
+                    height: 150,
+                    child: Center(
+                        child: Text(
+                      context.watch<GameSetting>().getScore.toString(),
                       textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Center(
-                child: Container(
-                  // margin: const EdgeInsets.all(50),
-                  width: deviceWidth * 0.7,
-                  height: deviceWidth * 0.15,
-                  child: TextField(
-                    controller: inputMaxPoint,
-                    keyboardType: TextInputType.number,
-                    // onChanged: (text) {
-                    //   setState(() {
-                    //     inputMaxPoint = text;
-                    //   });
-                    // },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: '점수 제한',
-                    ),
+                      style: TextStyle(
+                        fontSize: 90,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    )),
                   ),
                 ),
-              ),
-              Container(
-                width: deviceWidth * 0.8,
-                margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Score Setting",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Center(
-                child: Container(
-                  // margin: const EdgeInsets.all(50),
-                  width: deviceWidth * 0.7,
-                  height: deviceWidth * 0.15,
-                  child: TextField(
-                    controller: inputMaxScore,
-                    keyboardType: TextInputType.number,
-                    // onChanged: (text) {
-                    //   setState(() {
-                    //     inputMaxScore = text;
-                    //   });
-                    // },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: '세트 제한',
-                    ),
+                Text(
+                  "세트",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 10, 25, 0),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ScoreBoard()),
-                          );
-                        },
-                        child: Text("완료")),
-                  ),
-                ],
-              ),
-              // DropdownButton(
-              //   value: dropdownValue,
-              //   elevation: 16,
-              //   style: const TextStyle(color: Colors.blueGrey),
-              //   underline: Container(
-              //     width: 30,
-              //     height: 2,
-              //     color: Colors.blueAccent,
-              //   ),
-              //   onChanged: (String? newValue) {
-              //     setState(() {
-              //       dropdownValue = newValue!;
-              //     });
-              //   },
-              //   items: <String>['1', '2', '3', '4', '5']
-              //       .map<DropdownMenuItem<String>>((String value) {
-              //     return DropdownMenuItem<String>(
-              //       value: value,
-              //       child: Text(value),
-              //     );
-              //   }).toList(),
-              // ),
-
-              // //int 타입 dropdownButton 에러
-              // DropdownButton(
-              //   value: _selectecSetScore,
-              //   onChanged: (int? newValue) {
-              //     setState(() {
-              //       _selectecSetScore = newValue!;
-              //     });
-              //   },
-              //   items: _setScore.map((int value) {
-              //     return new DropdownMenuItem(
-              //       value: value,
-              //       child: new Text(value.toString()),
-              //     );
-              //   }).toList(),
-              // ),
-            ],
-          ),
+              ],
+            ),
+            IconButton(
+              icon: Icon(Icons.remove_circle_outlined),
+              iconSize: 50,
+              onPressed: () {
+                context.read<GameSetting>().decreMaxScore();
+              },
+            ),
+          ],
         ),
-      ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+                icon: Icon(Icons.add_circle_outlined),
+                iconSize: 50,
+                onPressed: () {
+                  context.read<GameSetting>().increMaxPoint();
+                }),
+            Row(
+              children: [
+                Card(
+                  color: Colors.white,
+                  elevation: 6.0,
+                  child: SizedBox(
+                    width: 120,
+                    height: 150,
+                    child: Center(
+                        child: Text(
+                      context.watch<GameSetting>().getPoint.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 90,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    )),
+                  ),
+                ),
+                Text(
+                  "점",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            IconButton(
+              icon: Icon(Icons.remove_circle_outlined),
+              iconSize: 50,
+              onPressed: () {
+                context.read<GameSetting>().decreMaxPoint();
+              },
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
