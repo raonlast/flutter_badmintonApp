@@ -58,28 +58,38 @@ class GameCounter with ChangeNotifier {
   void overPoint(String team) {
     if (team == "left") {
       _leftPoint = 0;
-      _leftScore++;
+      increScore(team);
     } else if (team == "right") {
       _rightPoint = 0;
-      _rightScore++;
+      increScore(team);
     }
     notifyListeners();
   }
 
-  void underPoint (int maxPoint, String team) {
+  void clearPoint(String team) {
+    if (team == "left") {
+      _leftPoint = 0;
+    } else if (team == "right") {
+      _rightPoint = 0;
+    }
+    notifyListeners();
+  }
+
+  void underPoint(int maxPoint, String team) {
     if (team == "left") {
       _leftPoint = maxPoint;
     } else if (team == "right") {
       _rightPoint = maxPoint;
     }
+    notifyListeners();
   }
 
-  void underScore (int maxScore, String team) {
+  void underScore(int maxScore, String team) {
     if (team == "left") {
       _leftScore = 0;
     } else if (team == "right") {
       _rightScore = 0;
     }
+    notifyListeners();
   }
-
 }

@@ -26,12 +26,15 @@ class _ScoreBoardState extends State<ScoreBoard> {
     int rightScore = Provider.of<GameCounter>(context).getRightScore;
     int rightPoint = Provider.of<GameCounter>(context).getRightPoint;
 
-    //최대 점수를 넘어갈 때
-    if (leftPoint > maxPoint) {
-      context.watch<GameCounter>().overPoint("left");
+    //최대 점수가 되었을 때
+    // point가 over되었을 때 바로 끝나지 않는 이슈 발견
+    if (leftPoint == maxPoint) {
+      context.read<GameCounter>().increScore("left");
+      context.read<GameCounter>().clearPoint("left");
     }
-    if (rightPoint > maxPoint) {
-      context.watch<GameCounter>().overPoint("right");
+    if (rightPoint == maxPoint) {
+      context.read<GameCounter>().increScore("right");
+      context.read<GameCounter>().clearPoint("right");
     }
 
     //점수 또는 스코어가 0이하로 내려갈 때
@@ -46,7 +49,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
 
     //최대 스코어에 도달할 때 => 우승
     if (maxScore == leftScore) {
-      //alertDialog Fix 필요
+      print("도달");
       return Center(
         child: AlertDialog(
           title: Text("왼쪽팀 승리 !"),
