@@ -37,24 +37,40 @@ class _ScoreBoardState extends State<ScoreBoard> {
     //최대 스코어에 도달할 때 => 우승
     if (maxScore == leftScore) {
       //alertDialog Fix 필요
-      return AlertDialog(
-        title: Text("winner!"),
-        content: SingleChildScrollView(
-          child: ListBody(children: [Text("왼쪽 팀 우승 !")]),
+      return Center(
+        child: AlertDialog(
+          title: Text("왼쪽팀 승리 !"),
+          actions: [
+            TextButton(
+              onPressed: () => {
+                // UX를 고려해 max 세트, 점수는 초기화 X
+                // context.read<GameSetting>().resetAll(),
+                context.read<GameCounter>().resetAll(),
+                Navigator.pop(context, 'Cancel'),
+              },
+              child: Text("돌아가기"),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            child: Text("닫기"),
-            onPressed: () {
-              context.watch<GameCounter>().resetAll();
-              Navigator.pop(context);
-            },
-          )
-        ],
       );
     }
     if (maxScore == rightScore) {
-      //AlertDialog 작성예정
+      return Center(
+        child: AlertDialog(
+          title: Text("오른쪽팀 승리 !"),
+          actions: [
+            TextButton(
+              onPressed: () => {
+                // UX를 고려해 max 세트, 점수는 초기화 X
+                // context.read<GameSetting>().resetAll(),
+                context.read<GameCounter>().resetAll(),
+                Navigator.pop(context, 'Cancel'),
+              },
+              child: Text("돌아가기"),
+            ),
+          ],
+        ),
+      );
     }
 
     return Row(

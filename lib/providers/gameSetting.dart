@@ -42,4 +42,10 @@ class GameSetting with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void resetAll() {
+    _maxPoint = 0;
+    _maxScore = 0;
+    notifyListeners();
+  }
 }

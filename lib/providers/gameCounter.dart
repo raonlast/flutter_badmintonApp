@@ -52,7 +52,7 @@ class GameCounter with ChangeNotifier {
     _leftScore = 0;
     _rightPoint = 0;
     _rightScore = 0;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void overPoint(String team) {
