@@ -65,4 +65,21 @@ class GameCounter with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void underPoint (int maxPoint, String team) {
+    if (team == "left") {
+      _leftPoint = maxPoint;
+    } else if (team == "right") {
+      _rightPoint = maxPoint;
+    }
+  }
+
+  void underScore (int maxScore, String team) {
+    if (team == "left") {
+      _leftScore = 0;
+    } else if (team == "right") {
+      _rightScore = 0;
+    }
+  }
+
 }

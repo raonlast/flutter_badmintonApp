@@ -34,6 +34,16 @@ class _ScoreBoardState extends State<ScoreBoard> {
       context.watch<GameCounter>().overPoint("right");
     }
 
+    //점수 또는 스코어가 0이하로 내려갈 때
+    if (leftPoint < 0)
+      context.watch<GameCounter>().underPoint(maxPoint, "left");
+    if (leftScore < 0)
+      context.watch<GameCounter>().underScore(maxScore, "left");
+    if (rightPoint < 0)
+      context.watch<GameCounter>().underPoint(maxPoint, "right");
+    if (rightScore < 0)
+      context.watch<GameCounter>().underScore(maxScore, "right");
+
     //최대 스코어에 도달할 때 => 우승
     if (maxScore == leftScore) {
       //alertDialog Fix 필요
