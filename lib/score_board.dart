@@ -127,7 +127,9 @@ class _ScoreBoardState extends State<ScoreBoard> {
                           if (leftPoint == 0) {
                             return;
                           }
-                          context.read<GameCounter>().decrePoint("left");
+                          if (_isPlaying) {
+                            context.read<GameCounter>().decrePoint("left");
+                          }
                         },
                         child: Container(
                           width: 180,
@@ -152,17 +154,19 @@ class _ScoreBoardState extends State<ScoreBoard> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // _pointCounter("left", "incre");
-                          // 이런식으로 진행해야함
-                          if (leftPoint == maxPoint) {
-                            context.read<GameCounter>().clearPoint("left");
-                            return;
-                          }
-                          if (leftPoint == maxPoint - 1) {
-                            context.read<GameCounter>().increScore("left");
-                            context.read<GameCounter>().increPoint("left");
-                          } else {
-                            context.read<GameCounter>().increPoint("left");
+                          //경기 시간 타이머가 pause가 되면 점수 카운트 불가하도록
+                          if (_isPlaying) {
+                            if (leftPoint == maxPoint ||
+                                rightPoint == maxPoint) {
+                              context.read<GameCounter>().resetPoint();
+                              return;
+                            }
+                            if (leftPoint == maxPoint - 1) {
+                              context.read<GameCounter>().increScore("left");
+                              context.read<GameCounter>().increPoint("left");
+                            } else {
+                              context.read<GameCounter>().increPoint("left");
+                            }
                           }
                         },
                         child: Container(
@@ -200,9 +204,11 @@ class _ScoreBoardState extends State<ScoreBoard> {
                                     if (leftScore == 0) {
                                       return;
                                     }
-                                    context
-                                        .read<GameCounter>()
-                                        .decreScore("left");
+                                    if (_isPlaying) {
+                                      context
+                                          .read<GameCounter>()
+                                          .decreScore("left");
+                                    }
                                   },
                                   child: Container(
                                     width: 90,
@@ -228,9 +234,11 @@ class _ScoreBoardState extends State<ScoreBoard> {
                                 GestureDetector(
                                   onTap: () {
                                     // _gamesCounter("left", "incre");
-                                    context
-                                        .read<GameCounter>()
-                                        .increScore("left");
+                                    if (_isPlaying) {
+                                      context
+                                          .read<GameCounter>()
+                                          .increScore("left");
+                                    }
                                   },
                                   child: Container(
                                     width: 90,
@@ -258,9 +266,11 @@ class _ScoreBoardState extends State<ScoreBoard> {
                                   if (rightScore == 0) {
                                     return;
                                   }
-                                  context
-                                      .read<GameCounter>()
-                                      .decreScore("right");
+                                  if (_isPlaying) {
+                                    context
+                                        .read<GameCounter>()
+                                        .decreScore("right");
+                                  }
                                 },
                                 child: Container(
                                   width: 90,
@@ -286,9 +296,11 @@ class _ScoreBoardState extends State<ScoreBoard> {
                               GestureDetector(
                                 onTap: () {
                                   // _gamesCounter("right", "incre");
-                                  context
-                                      .read<GameCounter>()
-                                      .increScore("right");
+                                  if (_isPlaying) {
+                                    context
+                                        .read<GameCounter>()
+                                        .increScore("right");
+                                  }
                                 },
                                 child: Container(
                                   width: 90,
@@ -303,46 +315,57 @@ class _ScoreBoardState extends State<ScoreBoard> {
                 ),
               ],
             ),
-            GestureDetector(
-              onTap: () {
-                _isPlaying = !_isPlaying;
-
-                if (_isPlaying) {
-                  _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-                    if (_seconds < 9) {
-                      setState(() {
-                        _seconds++;
-                        _secondResult = "0$_seconds";
-                      });
-                    } else {
-                      setState(() {
-                        _seconds++;
-                        _secondResult = "$_seconds";
-                      });
-                    }
-                    if (_seconds == 59) {
-                      _minutes++;
-                      if (_minutes < 9) {
-                        _minuteResult = "0$_minutes";
-                      } else {
-                        _minuteResult = "$_minutes";
-                      }
-                      _seconds = 0;
-                    }
-                  });
-                } else {
-                  _timer?.cancel();
-                }
-              },
-              child: Text(
-                "$_minuteResult:$_secondResult",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 70,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
+            Text(
+              "$_minuteResult:$_secondResult",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
+            Row(
+              children: [
+                IconButton(
+                    icon: Icon(Icons.pause),
+                    iconSize: 40,
+                    onPressed: () {
+                      if (_isPlaying == true) {
+                        _timer?.cancel();
+                        _isPlaying = !_isPlaying;
+                      }
+                    }),
+                IconButton(
+                    icon: Icon(Icons.play_arrow),
+                    iconSize: 40,
+                    onPressed: () {
+                      if (_isPlaying == false) {
+                        _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+                          if (_seconds < 9) {
+                            setState(() {
+                              _seconds++;
+                              _secondResult = "0$_seconds";
+                            });
+                          } else {
+                            setState(() {
+                              _seconds++;
+                              _secondResult = "$_seconds";
+                            });
+                          }
+                          if (_seconds == 59) {
+                            _minutes++;
+                            if (_minutes < 9) {
+                              _minuteResult = "0$_minutes";
+                            } else {
+                              _minuteResult = "$_minutes";
+                            }
+                            _seconds = 0;
+                          }
+                        });
+                      }
+                      _isPlaying = !_isPlaying;
+                    })
+              ],
+            )
           ],
         ),
         Card(
@@ -366,7 +389,9 @@ class _ScoreBoardState extends State<ScoreBoard> {
                         if (rightPoint == 0) {
                           return;
                         }
-                        context.read<GameCounter>().decrePoint("right");
+                        if (_isPlaying) {
+                          context.read<GameCounter>().decrePoint("right");
+                        }
                       },
                       child: Container(
                         width: 180,
@@ -392,15 +417,17 @@ class _ScoreBoardState extends State<ScoreBoard> {
                     GestureDetector(
                       onTap: () {
                         // _pointCounter("right", "incre");
-                        if (rightPoint == maxPoint) {
-                          context.read<GameCounter>().resetPoint();
-                          return;
-                        }
-                        if (rightPoint == maxPoint - 1) {
-                          context.read<GameCounter>().increScore("right");
-                          context.read<GameCounter>().increPoint("right");
-                        } else {
-                          context.read<GameCounter>().increPoint("right");
+                        if (_isPlaying) {
+                          if (rightPoint == maxPoint || leftPoint == maxPoint) {
+                            context.read<GameCounter>().resetPoint();
+                            return;
+                          }
+                          if (rightPoint == maxPoint - 1) {
+                            context.read<GameCounter>().increScore("right");
+                            context.read<GameCounter>().increPoint("right");
+                          } else {
+                            context.read<GameCounter>().increPoint("right");
+                          }
                         }
                       },
                       child: Container(
