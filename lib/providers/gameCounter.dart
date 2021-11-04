@@ -22,9 +22,7 @@ class GameCounter with ChangeNotifier {
 
   void decrePoint(String team) {
     if (team == "left") {
-      if(_leftPoint == 0) {
-        
-      }
+      if (_leftPoint == 0) {}
       _leftPoint--;
     } else if (team == "right") {
       _rightPoint--;
@@ -47,6 +45,12 @@ class GameCounter with ChangeNotifier {
     } else if (team == "right") {
       _rightScore--;
     }
+    notifyListeners();
+  }
+
+  void resetPoint() {
+    _leftPoint = 0;
+    _rightPoint = 0;
     notifyListeners();
   }
 

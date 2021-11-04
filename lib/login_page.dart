@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/history_page.dart';
 import 'package:flutter_application_1/setting_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -88,10 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  SettingPage())).then((value) {
-                        SystemChrome.setPreferredOrientations(
-                            [DeviceOrientation.portraitUp]);
-                      });
+                                  HistoryPage()));
                     },
                   ),
                 ),

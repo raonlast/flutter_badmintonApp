@@ -13,7 +13,7 @@ class ScoreBoard extends StatefulWidget {
 }
 
 class _ScoreBoardState extends State<ScoreBoard> {
-  late Timer _timer;
+  Timer? _timer;
   int _seconds = 0;
   int _minutes = 0;
   String _secondResult = "00";
@@ -21,9 +21,15 @@ class _ScoreBoardState extends State<ScoreBoard> {
   bool _isPlaying = false;
   // List<String> _saveTimes = [];
 
+  // @override
+  // void initState() {
+  //   _isPlaying = !_isPlaying;
+  //   super.initState();
+  // }
+
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -119,9 +125,6 @@ class _ScoreBoardState extends State<ScoreBoard> {
                         onTap: () {
                           // _pointCounter("left", "decre");
                           if (leftPoint == 0) {
-                            context
-                                .watch<GameCounter>()
-                                .underPoint(maxPoint, "left");
                             return;
                           }
                           context.read<GameCounter>().decrePoint("left");
@@ -194,6 +197,9 @@ class _ScoreBoardState extends State<ScoreBoard> {
                                 GestureDetector(
                                   onTap: () {
                                     // _gamesCounter("left", "decre");
+                                    if (leftScore == 0) {
+                                      return;
+                                    }
                                     context
                                         .read<GameCounter>()
                                         .decreScore("left");
@@ -249,6 +255,9 @@ class _ScoreBoardState extends State<ScoreBoard> {
                               GestureDetector(
                                 onTap: () {
                                   // _gamesCounter("right", "decre");
+                                  if (rightScore == 0) {
+                                    return;
+                                  }
                                   context
                                       .read<GameCounter>()
                                       .decreScore("right");
@@ -311,7 +320,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
                         _secondResult = "$_seconds";
                       });
                     }
-                    if (_seconds == 60) {
+                    if (_seconds == 59) {
                       _minutes++;
                       if (_minutes < 9) {
                         _minuteResult = "0$_minutes";
@@ -322,7 +331,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
                     }
                   });
                 } else {
-                  _timer.cancel();
+                  _timer?.cancel();
                 }
               },
               child: Text(
@@ -354,6 +363,9 @@ class _ScoreBoardState extends State<ScoreBoard> {
                         //     context.read<GameCounter>().increScore("left");
                         //     context.read<GameCounter>().clearPoint("left");
                         //   }
+                        if (rightPoint == 0) {
+                          return;
+                        }
                         context.read<GameCounter>().decrePoint("right");
                       },
                       child: Container(
@@ -380,7 +392,16 @@ class _ScoreBoardState extends State<ScoreBoard> {
                     GestureDetector(
                       onTap: () {
                         // _pointCounter("right", "incre");
-                        context.read<GameCounter>().increPoint("right");
+                        if (rightPoint == maxPoint) {
+                          context.read<GameCounter>().resetPoint();
+                          return;
+                        }
+                        if (rightPoint == maxPoint - 1) {
+                          context.read<GameCounter>().increScore("right");
+                          context.read<GameCounter>().increPoint("right");
+                        } else {
+                          context.read<GameCounter>().increPoint("right");
+                        }
                       },
                       child: Container(
                         width: 180,
