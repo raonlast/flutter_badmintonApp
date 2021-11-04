@@ -13,6 +13,20 @@ class ScoreBoard extends StatefulWidget {
 }
 
 class _ScoreBoardState extends State<ScoreBoard> {
+  late Timer _timer;
+  int _seconds = 0;
+  int _minutes = 0;
+  String _secondResult = "00";
+  String _minuteResult = "00";
+  bool _isPlaying = false;
+  // List<String> _saveTimes = [];
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // SystemChrome.setPreferredOrientations(
@@ -33,20 +47,20 @@ class _ScoreBoardState extends State<ScoreBoard> {
     //   context.read<GameCounter>().increScore("left");
     //   context.read<GameCounter>().clearPoint("left");
     // }
-    if (rightPoint == maxPoint) {
-      context.read<GameCounter>().increScore("right");
-      context.read<GameCounter>().clearPoint("right");
-    }
+    // if (rightPoint == maxPoint) {
+    //   context.read<GameCounter>().increScore("right");
+    //   context.read<GameCounter>().clearPoint("right");
+    // }
 
     //점수 또는 스코어가 0이하로 내려갈 때
-    if (leftPoint < 0)
-      context.watch<GameCounter>().underPoint(maxPoint, "left");
-    if (leftScore < 0)
-      context.watch<GameCounter>().underScore(maxScore, "left");
-    if (rightPoint < 0)
-      context.watch<GameCounter>().underPoint(maxPoint, "right");
-    if (rightScore < 0)
-      context.watch<GameCounter>().underScore(maxScore, "right");
+    // if (leftPoint < 0)
+    //   context.watch<GameCounter>().underPoint(maxPoint, "left");
+    // if (leftScore < 0)
+    //   context.watch<GameCounter>().underScore(maxScore, "left");
+    // if (rightPoint < 0)
+    //   context.watch<GameCounter>().underPoint(maxPoint, "right");
+    // if (rightScore < 0)
+    //   context.watch<GameCounter>().underScore(maxScore, "right");
 
     //최대 스코어에 도달할 때 => 우승
     if (maxScore == leftScore) {
@@ -104,6 +118,12 @@ class _ScoreBoardState extends State<ScoreBoard> {
                       GestureDetector(
                         onTap: () {
                           // _pointCounter("left", "decre");
+                          if (leftPoint == 0) {
+                            context
+                                .watch<GameCounter>()
+                                .underPoint(maxPoint, "left");
+                            return;
+                          }
                           context.read<GameCounter>().decrePoint("left");
                         },
                         child: Container(
@@ -131,10 +151,15 @@ class _ScoreBoardState extends State<ScoreBoard> {
                         onTap: () {
                           // _pointCounter("left", "incre");
                           // 이런식으로 진행해야함
-                          context.read<GameCounter>().increPoint("left");
                           if (leftPoint == maxPoint) {
-                            context.read<GameCounter>().increScore("left");
                             context.read<GameCounter>().clearPoint("left");
+                            return;
+                          }
+                          if (leftPoint == maxPoint - 1) {
+                            context.read<GameCounter>().increScore("left");
+                            context.read<GameCounter>().increPoint("left");
+                          } else {
+                            context.read<GameCounter>().increPoint("left");
                           }
                         },
                         child: Container(
@@ -269,14 +294,46 @@ class _ScoreBoardState extends State<ScoreBoard> {
                 ),
               ],
             ),
-            Text(
-              "00:00",
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 70,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            )
+            GestureDetector(
+              onTap: () {
+                _isPlaying = !_isPlaying;
+
+                if (_isPlaying) {
+                  _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+                    if (_seconds < 9) {
+                      setState(() {
+                        _seconds++;
+                        _secondResult = "0$_seconds";
+                      });
+                    } else {
+                      setState(() {
+                        _seconds++;
+                        _secondResult = "$_seconds";
+                      });
+                    }
+                    if (_seconds == 60) {
+                      _minutes++;
+                      if (_minutes < 9) {
+                        _minuteResult = "0$_minutes";
+                      } else {
+                        _minuteResult = "$_minutes";
+                      }
+                      _seconds = 0;
+                    }
+                  });
+                } else {
+                  _timer.cancel();
+                }
+              },
+              child: Text(
+                "$_minuteResult:$_secondResult",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 70,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            ),
           ],
         ),
         Card(
@@ -292,6 +349,11 @@ class _ScoreBoardState extends State<ScoreBoard> {
                     GestureDetector(
                       onTap: () {
                         // _pointCounter("right", "decre");
+                        // context.read<GameCounter>().increPoint("left");
+                        //   if (leftPoint == maxPoint) {
+                        //     context.read<GameCounter>().increScore("left");
+                        //     context.read<GameCounter>().clearPoint("left");
+                        //   }
                         context.read<GameCounter>().decrePoint("right");
                       },
                       child: Container(
