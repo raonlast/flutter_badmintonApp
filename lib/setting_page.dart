@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/board.dart';
+import 'package:flutter_application_1/providers/gameCounter.dart';
 import 'package:flutter_application_1/providers/gameSetting.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -135,7 +136,8 @@ class _SettingPageState extends State<SettingPage> {
         backgroundColor: Colors.black,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => Board()));
+                  MaterialPageRoute(builder: (BuildContext context) => Board()))
+              .then((value) => context.read<GameCounter>().resetAll());
         },
       ),
     );

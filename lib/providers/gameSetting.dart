@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class GameSetting with ChangeNotifier {
-  int _maxPoint = 0;
-  int _maxScore = 0;
+  //최소 변경
+  int _maxPoint = 5;
+  int _maxScore = 1;
 
   int get getPoint => _maxPoint;
   int get getScore => _maxScore;
@@ -11,13 +12,13 @@ class GameSetting with ChangeNotifier {
     if (_maxPoint < 25) {
       _maxPoint++;
     } else {
-      _maxPoint = 0;
+      _maxPoint = 5;
     }
     notifyListeners();
   }
 
   void decreMaxPoint() {
-    if (_maxPoint > 0) {
+    if (_maxPoint > 5) {
       _maxPoint--;
     } else {
       _maxPoint = 25;
@@ -29,13 +30,13 @@ class GameSetting with ChangeNotifier {
     if (_maxScore < 5) {
       _maxScore++;
     } else {
-      _maxScore = 0;
+      _maxScore = 1;
     }
     notifyListeners();
   }
 
   void decreMaxScore() {
-    if (_maxScore > 0) {
+    if (_maxScore > 1) {
       _maxScore--;
     } else {
       _maxScore = 5;
@@ -44,8 +45,8 @@ class GameSetting with ChangeNotifier {
   }
 
   void resetAll() {
-    _maxPoint = 0;
-    _maxScore = 0;
+    _maxPoint = 5;
+    _maxScore = 1;
     notifyListeners();
   }
 }

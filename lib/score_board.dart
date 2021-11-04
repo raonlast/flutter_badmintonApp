@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_1/providers/gameCounter.dart';
 import 'package:flutter_application_1/providers/gameSetting.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 
 class ScoreBoard extends StatefulWidget {
   const ScoreBoard({Key? key}) : super(key: key);
@@ -150,108 +151,133 @@ class _ScoreBoardState extends State<ScoreBoard> {
             )
             // margin: const EdgeInsets.only(left: 10),
             ),
-        Card(
-            color: Colors.black,
-            elevation: 6.0,
-            child: SizedBox(
-                width: 90,
-                height: 135,
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            // _gamesCounter("left", "decre");
-                            context.read<GameCounter>().decreScore("left");
-                          },
-                          child: Container(
-                            width: 90,
-                            height: 135,
-                            color: Colors.transparent,
-                            child: Center(
-                              child: Text(
-                                // '$_leftGamesScore',
-                                context
-                                    .watch<GameCounter>()
-                                    .getLeftScore
-                                    .toString(),
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 90,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Card(
+                    color: Colors.black,
+                    elevation: 6.0,
+                    child: SizedBox(
+                        width: 90,
+                        height: 135,
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    // _gamesCounter("left", "decre");
+                                    context
+                                        .read<GameCounter>()
+                                        .decreScore("left");
+                                  },
+                                  child: Container(
+                                    width: 90,
+                                    height: 135,
+                                    color: Colors.transparent,
+                                    child: Center(
+                                      child: Text(
+                                        // '$_leftGamesScore',
+                                        context
+                                            .watch<GameCounter>()
+                                            .getLeftScore
+                                            .toString(),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 90,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    // _gamesCounter("left", "incre");
+                                    context
+                                        .read<GameCounter>()
+                                        .increScore("left");
+                                  },
+                                  child: Container(
+                                    width: 90,
+                                    height: 67.5,
+                                    color: Colors.transparent,
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ))),
+                Card(
+                  color: Colors.black,
+                  elevation: 6.0,
+                  child: SizedBox(
+                      width: 90,
+                      height: 135,
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  // _gamesCounter("right", "decre");
+                                  context
+                                      .read<GameCounter>()
+                                      .decreScore("right");
+                                },
+                                child: Container(
+                                  width: 90,
+                                  height: 135,
+                                  color: Colors.transparent,
+                                  child: Center(
+                                    child: Text(
+                                      // '$_rightGamesScore',
+                                      context
+                                          .watch<GameCounter>()
+                                          .getRightScore
+                                          .toString(),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 90,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            // _gamesCounter("left", "incre");
-                            context.read<GameCounter>().increScore("left");
-                          },
-                          child: Container(
-                            width: 90,
-                            height: 67.5,
-                            color: Colors.transparent,
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ))),
-        Card(
-          color: Colors.black,
-          elevation: 6.0,
-          child: SizedBox(
-              width: 90,
-              height: 135,
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          // _gamesCounter("right", "decre");
-                          context.read<GameCounter>().decreScore("right");
-                        },
-                        child: Container(
-                          width: 90,
-                          height: 135,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text(
-                              // '$_rightGamesScore',
-                              context
-                                  .watch<GameCounter>()
-                                  .getRightScore
-                                  .toString(),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 90,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          // _gamesCounter("right", "incre");
-                          context.read<GameCounter>().increScore("right");
-                        },
-                        child: Container(
-                          width: 90,
-                          height: 67.5,
-                          color: Colors.transparent,
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              )),
+                              GestureDetector(
+                                onTap: () {
+                                  // _gamesCounter("right", "incre");
+                                  context
+                                      .read<GameCounter>()
+                                      .increScore("right");
+                                },
+                                child: Container(
+                                  width: 90,
+                                  height: 67.5,
+                                  color: Colors.transparent,
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      )),
+                ),
+              ],
+            ),
+            Text(
+              "00:00",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            )
+          ],
         ),
         Card(
           color: Colors.black,
