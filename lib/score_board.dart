@@ -21,11 +21,35 @@ class _ScoreBoardState extends State<ScoreBoard> {
   bool _isPlaying = false;
   // List<String> _saveTimes = [];
 
-  // @override
-  // void initState() {
-  //   _isPlaying = !_isPlaying;
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    if (!_isPlaying) {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (_seconds < 9) {
+          setState(() {
+            _seconds++;
+            _secondResult = "0$_seconds";
+          });
+        } else {
+          setState(() {
+            _seconds++;
+            _secondResult = "$_seconds";
+          });
+        }
+        if (_seconds == 59) {
+          _minutes++;
+          if (_minutes < 9) {
+            _minuteResult = "0$_minutes";
+          } else {
+            _minuteResult = "$_minutes";
+          }
+          _seconds = 0;
+        }
+      });
+      _isPlaying = !_isPlaying;
+    }
+    super.initState();
+  }
 
   @override
   void dispose() {
