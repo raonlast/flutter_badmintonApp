@@ -37,6 +37,7 @@ dependencies:
   flip_card: ^0.6.0
   flip_panel: ^1.0.1
   provider: ^6.0.1
+  shared_preferences: ^2.0.7
 
 dev_dependencies:
   flutter_test:

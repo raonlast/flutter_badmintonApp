@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/setting_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -10,6 +11,20 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  var timer = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTimer();
+  }
+
+  _loadTimer() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var timer = (prefs.getStringList('timer') ?? []);
+    print(timer);
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
@@ -20,9 +35,12 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
         body: Column(
           children: [
-            Card(
-              child: ListTile(
-                title: Text("History Example"),
+            GestureDetector(
+              onTap: () {},
+              child: Card(
+                child: ListTile(
+                  title: Text("History Example"),
+                ),
               ),
             ),
             Card(
@@ -42,7 +60,6 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
             Card(
               child: ListTile(
-                
                 title: Text("History Example"),
               ),
             ),

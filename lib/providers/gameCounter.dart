@@ -99,4 +99,5 @@ class GameCounter with ChangeNotifier {
     }
     notifyListeners();
   }
+
 }
