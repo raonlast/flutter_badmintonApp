@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/db/db.dart';
 import 'package:flutter_application_1/history_page.dart';
 import 'package:flutter_application_1/providers/gameCounter.dart';
 import 'package:flutter_application_1/providers/gameSetting.dart';
@@ -141,6 +142,10 @@ class _ScoreBoardState extends State<ScoreBoard> {
               onPressed: () => {
                 // UX를 고려해 max 세트, 점수는 초기화 X
                 // context.read<GameSetting>().resetAll(),
+                // DB_helper().insertScor
+                context
+                    .read<GameCounter>()
+                    .saveData(_secondResult, _minuteResult),
                 _updateTimer(),
                 context.read<GameCounter>().resetAll(),
                 Navigator.pop(context, 'Cancel'),

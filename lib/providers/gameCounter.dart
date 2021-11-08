@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+
+import 'package:flutter_application_1/db/db.dart';
 
 class GameCounter with ChangeNotifier {
   int _leftPoint = 0;
@@ -10,6 +13,23 @@ class GameCounter with ChangeNotifier {
   int get getLeftScore => _leftScore;
   int get getRightPoint => _rightPoint;
   int get getRightScore => _rightScore;
+
+  void loadData() async {
+    var matches = await DB_helper().scores();
+
+    print(matches);
+  }
+
+  void saveData(String minutes, String seconds) async {
+    var result = Score(
+      leftScore: _leftScore,
+      rightScore: _rightScore,
+      seconds: seconds,
+      minutes: minutes,
+    );
+
+    await DB_helper().insertScore(result);
+  }
 
   void increPoint(String team) {
     if (team == "left") {
@@ -99,5 +119,6 @@ class GameCounter with ChangeNotifier {
     }
     notifyListeners();
   }
-
 }
+
+// Future<Database> 
