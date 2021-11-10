@@ -4,96 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DB_helper {
-  // final database = openDatabase(
-  //   join(await getDatabasesPath(), 'score_database.db'),
-  //   onCreate: (db, version) {
-  //     return db.execute(
-  //       '''
-  //         create table score(
-  //           id integer primary key autoincrement,
-  //           leftScore integer,
-  //           rightScore integer,
-  //         )
-  //       ''',
-  //     );
-  //   },
-  //   version: 1,
-  // );
-  var _db;
-
-  Future<Database> get database async {
-    _db = openDatabase(
-      join(await getDatabasesPath(), 'score_database.db'),
-      version: 1,
-      onCreate: (db, version) {
-        return db.execute(
-          "create table score(id integer primary key autoincrement, leftScore integer, rightScore integer)",
-        );
-      },
-    );
-
-    return _db;
-  }
-
-  Future<void> insertScore(Score score) async {
-    final Database db = await database;
-
-    await db.insert(
-      'score',
-      score.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<List<Map<String, dynamic>>> scores() async {
-    final Database db = await database;
-
-    final List<Map<String, dynamic>> maps = await db.query('score');
-
-    return maps;
-
-    // List.generate(maps.length, (index) {
-    //   return Score(
-    //     leftScore: maps[index]['leftScore'],
-    //     rightScore: maps[index]['rightScore'],
-    //   );
-    // });
-  }
-
-  Future<void> deleteScore(int id) async {
-    final db = await database;
-
-    await db.delete(
-      'score',
-      where: "id = ?",
-      whereArgs: [id],
-    );
-  }
-}
-
 class Score {
-  // final int leftPoint;
-  final int leftScore;
-  // final int rightPoint;
-  final int rightScore;
-  final String minutes;
-  final String seconds;
+  int leftScore;
+  int rightScore;
+  String minutes;
+  String seconds;
 
   Score({
-    // required this.leftPoint,
     required this.leftScore,
-    // required this.rightPoint,
     required this.rightScore,
     required this.minutes,
     required this.seconds,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, Object?> toMap() {
     return {
-      // 'leftPoint': leftPoint,
       'leftScore': leftScore,
-      // 'rightPoint': rightPoint,
       'rightScore': rightScore,
       'minutes': minutes,
       'seconds': seconds,
@@ -101,41 +27,95 @@ class Score {
   }
 
   // @override
-  // Card card() {
-  //   return Card(
-  //     child: ListTile(
-  //       title: Text("$leftScore : $rightScore"),
-  //     ),
-  //   );
+  // String toString() {
+  //   // TODO: implement toString
+  //   return 'leftScore: $leftScore, rightScore: $rightScore, minutes: $minutes, seconds: $seconds';
   // }
-  @override
-  String toString() {
-    return 'Score{leftScore: $leftScore, rightScore: $rightScore}';
-  }
+  // Score.fromMap(Map<String, dynamic> res)
+  //     : leftScore = res['leftScore'],
+  //       rightScore = res['rightScore'],
+  //       minutes = res['minutes'],
+  //       seconds = res['seconds'];
+
+  // Map<String, Object?> toMap() {
+  //   return {
+  //     'leftScore': leftScore,
+  //     'rightScore': rightScore,
+  //     'minutes': minutes,
+  //     'seconds': seconds
+  //   };
+  // }
+
 }
 
-// class DB_helper {
-//   late Database db;
-  
-//   Future open(String path) async {
-//     db = await openDatabase(
-//       path,
-//       version: 1,
-//       onCreate: (Database db, int version) async {
-//         await db.execute(
-//         '''
-//           create table score (
-//             _id integer primary key autoincrement,
-//             leftPoint integer not null,
-//             leftScore integer not null,
-//             rightPoint integer not null,
-//             rightScore integer not null,
-//           )
-//         '''
-//         );
-//       }
-//     );
+class DB_Helper {
+  var _db;
+
+  Future<Database> get database async {
+    if (_db != null) return _db;
+    _db = openDatabase(join(await getDatabasesPath(), 'score.db'),
+        onCreate: (db, version) => _createDb(db), version: 1);
+    return _db;
+  }
+
+  static void _createDb(Database db) {
+    db.execute(
+      "CREATE TABLE score(id INTEGER PRIMARY KEY AUTOINCREMENT, leftScore INTEGER, rightScore INTEGER, minutes TEXT, seconds TEXT)",
+    );
+  }
+
+  Future<List<Score>> getScore() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query('score');
+
+    return List.generate(maps.length, (index) {
+      return Score(
+        leftScore: maps[index]['leftScore'],
+        rightScore: maps[index]['rightScore'],
+        minutes: maps[index]['minutes'],
+        seconds: maps[index]['seconds'],
+      );
+    });
+  }
+
+  Future<void> insertScore(Score score) async {
+    final db = await database;
+
+    await db.insert('score', score.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<void> deleteAll() async {
+    final db = await database;
+
+    await db.delete('score').then((value) => print("delete All"));
+  }
+} //DB_helper
+
+// class DB_Helper {
+//   Future<Database> initializeDB() async {
+//     String path = await getDatabasesPath();
+//     return openDatabase(join(path, 'score.db'),
+//         onCreate: (database, version) async {
+//       await database.execute(
+//           "CREATE TABLE score(id INTEGER PRIMARY KEY AUTOINCREMENT, leftScore INTEGER, rightScore INTEGER, minutes TEXT, seconds TEXT)");
+//     });
 //   }
 
-//   Future<
+//   Future<int> insertScore(List<Score> scores) async {
+//     int result = 0;
+//     final Database db = await initializeDB();
+//     for (var score in scores) {
+//       result = await db.insert('score', score.toMap());
+//     }
+//     return result;
+//   }
+
+//   Future<List<Score>> retrieveScores() async {
+//     final Database db = await initializeDB();
+//     final List<Map<String, Object?>> queryResult = await db.query('score');
+//     return queryResult.map((e) => Score.fromMap(e)).toList();
+//   }
 // }
+

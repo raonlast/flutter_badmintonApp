@@ -17,7 +17,8 @@ class ScoreBoard extends StatefulWidget {
 
 class _ScoreBoardState extends State<ScoreBoard> {
   //Timer 변수들
-  Timer? _timer;
+  Timer? _secondTimer;
+  Timer? _minuteTimer;
   int _seconds = 0;
   int _minutes = 0;
   String _secondResult = "00";
@@ -37,7 +38,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
     // _loadCounter();
 
     if (!_isPlaying) {
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _secondTimer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (_seconds < 9) {
           setState(() {
             _seconds++;
@@ -59,13 +60,17 @@ class _ScoreBoardState extends State<ScoreBoard> {
           _seconds = 0;
         }
       });
+      // _minuteTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+      //   if (_minutes < 9)
+      // });
+
       _isPlaying = !_isPlaying;
     }
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _secondTimer?.cancel();
     super.dispose();
   }
 
@@ -75,20 +80,6 @@ class _ScoreBoardState extends State<ScoreBoard> {
     print('time is $timer');
     await prefs.setStringList('timer', [_minuteResult, _secondResult]);
   }
-
-  // _loadCounter() async {
-  //   _prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     _counter = (_prefs?.getInt("counter") ?? 0);
-  //   });
-  // }
-
-  // _updateCounter() async {
-  //   setState(() {
-  //     _counter = (_prefs?.getInt("counter") ?? 0) + 1;
-  //     _prefs?.setInt("counter", _counter);
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -107,31 +98,6 @@ class _ScoreBoardState extends State<ScoreBoard> {
     bool isDeuce = Provider.of<GameSetting>(context).getDeuce;
     int deuceMaxPoint = maxPoint;
 
-    //최대 점수가 되었을 때
-    // point가 over되었을 때 바로 끝나지 않는 이슈 발견
-    // if (leftPoint == maxPoint) {
-    //   context.read<GameCounter>().increScore("left");
-    //   context.read<GameCounter>().clearPoint("left");
-    // }
-    // if (rightPoint == maxPoint) {
-    //   context.read<GameCounter>().increScore("right");
-    //   context.read<GameCounter>().clearPoint("right");
-    // }
-
-    //점수 또는 스코어가 0이하로 내려갈 때
-    // if (leftPoint < 0)
-    //   context.watch<GameCounter>().underPoint(maxPoint, "left");
-    // if (leftScore < 0)
-    //   context.watch<GameCounter>().underScore(maxScore, "left");
-    // if (rightPoint < 0)
-    //   context.watch<GameCounter>().underPoint(maxPoint, "right");
-    // if (rightScore < 0)
-    //   context.watch<GameCounter>().underScore(maxScore, "right");
-
-    // if (leftPoint == maxPoint && rightPoint == maxPoint) {
-    //   context.read<GameSetting>().
-    // }
-
     //최대 스코어에 도달할 때 => 우승
     if (maxScore == leftScore) {
       return Center(
@@ -145,10 +111,13 @@ class _ScoreBoardState extends State<ScoreBoard> {
                 // DB_helper().insertScor
                 context
                     .read<GameCounter>()
-                    .saveData(_secondResult, _minuteResult),
+                    .saveData(_minuteResult, _secondResult),
                 _updateTimer(),
                 context.read<GameCounter>().resetAll(),
-                Navigator.pop(context, 'Cancel'),
+                // Navigator.pop(context, 'Cancel'),
+                Navigator.pushReplacementNamed(context, '/').then((value) =>
+                    SystemChrome.setPreferredOrientations(
+                        [DeviceOrientation.portraitUp]))
               },
               child: Text("돌아가기"),
             ),
@@ -165,9 +134,14 @@ class _ScoreBoardState extends State<ScoreBoard> {
               onPressed: () => {
                 // UX를 고려해 max 세트, 점수는 초기화 X
                 // context.read<GameSetting>().resetAll(),
+                context
+                    .read<GameCounter>()
+                    .saveData(_minuteResult, _secondResult),
                 _updateTimer(),
                 context.read<GameCounter>().resetAll(),
-                Navigator.pop(context, 'Cancel'),
+                Navigator.pushReplacementNamed(context, '/').then((value) =>
+                    SystemChrome.setPreferredOrientations(
+                        [DeviceOrientation.portraitUp]))
               },
               child: Text("돌아가기"),
             ),
@@ -411,7 +385,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
                     iconSize: 40,
                     onPressed: () {
                       if (_isPlaying == true) {
-                        _timer?.cancel();
+                        _secondTimer?.cancel();
                         _isPlaying = !_isPlaying;
                       }
                     }),
@@ -420,7 +394,8 @@ class _ScoreBoardState extends State<ScoreBoard> {
                     iconSize: 40,
                     onPressed: () {
                       if (_isPlaying == false) {
-                        _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+                        _secondTimer =
+                            Timer.periodic(Duration(seconds: 1), (timer) {
                           if (_seconds < 9) {
                             setState(() {
                               _seconds++;
