@@ -78,7 +78,7 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                     Text(
-                      "세트",
+                      "Set",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 40,
@@ -125,7 +125,7 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                     Text(
-                      "점",
+                      "Point",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 40,

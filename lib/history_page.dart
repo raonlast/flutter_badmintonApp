@@ -19,23 +19,14 @@ class _HistoryPageState extends State<HistoryPage> {
   bool loading = false;
   DB_Helper dbHelper = DB_Helper();
   Future<List<Score>>? getList;
-  // late DB_Helper helper;
 
   @override
   void initState() {
     super.initState();
-    // this.helper = DB_Helper();
-    // this.helper.initializeDB();
-    // _loadData();
+    dbHelper.initializeDB();
     getList = dbHelper.getScore();
     _loadTimer();
   }
-
-  // Future _loadData() async {
-  //   print("getScore: ${await dbHelper.getScore().toString()}");
-  //   print("getList: $getList");
-  //   return getList;
-  // }
 
   _loadTimer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -53,12 +44,13 @@ class _HistoryPageState extends State<HistoryPage> {
       return Container(
         child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: Text("History Page"),
           ),
           body: Container(
             child: Center(
               child: FutureBuilder(
-                future: getList,
+                future: dbHelper.getScore(),
                 builder: (context, AsyncSnapshot<List<Score>> snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.none:
@@ -71,17 +63,41 @@ class _HistoryPageState extends State<HistoryPage> {
                       if (snapshot.hasData) {
                         List<Score> data = List.from(snapshot.data!.reversed);
                         // List<Score> data = snapshot.data!;
+                        // print(getList!.then((value) => print(value[0].id)));
+                        // print(data);
                         return ListView.builder(
                             itemCount: snapshot.data?.length,
                             itemBuilder: (context, int index) {
-                              print(index);
-                              return GestureDetector(
+                              // final item = data[index];
+                              print(data[index].toMap());
+                              return Dismissible(
+                                key: UniqueKey(),
+                                onDismissed: (direction) async {
+                                  await dbHelper.deleteScore(data[index].id!);
+                                  setState(() {
+                                    data.removeAt(index);
+                                    // getList!
+                                    //     .then((value) => value.removeAt(index));
+                                  });
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text("Match Dismissed")));
+                                },
                                 child: Card(
                                   child: ListTile(
                                     title: Text(
                                         "${data[index].leftScore.toString()} : ${data[index].rightScore.toString()}"),
-                                    subtitle: Text(
-                                        "${data[index].minutes}m ${data[index].seconds}s"),
+                                    subtitle: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            "${data[index].minutes}m ${data[index].seconds}s"),
+                                        Text(
+                                            "${data[index].year}/${data[index].month}/${data[index].day}")
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
@@ -95,39 +111,13 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
           ),
 
-          // FutureBuilder(
-          //   future: this.helper.retrieveScores(),
-          //   builder:
-          //       (BuildContext context, AsyncSnapshot<List<Score>> snapshot) {
-          //     if (snapshot.hasData) {
-          //       return ListView.builder(
-          //         itemCount: snapshot.data?.length,
-          //         itemBuilder: (BuildContext context, int index) {
-          //           return Card(
-          //             child: ListTile(
-          //               contentPadding: EdgeInsets.all(8),
-          //               title: Text(snapshot.data![index].leftScore.toString()),
-          //             ),
-          //           );
-          //         },
-          //       );
-          //     } else {
-          //       return Center(child: CircularProgressIndicator());
-          //     }
-          //   },
-          // ),
-
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (BuildContext context) => SettingPage())).then(
-              //     (value) => SystemChrome.setPreferredOrientations(
-              //         [DeviceOrientation.portraitUp]));
-              Navigator.of(context).pushNamed('/setting').then((value) =>
-                  SystemChrome.setPreferredOrientations(
-                      [DeviceOrientation.portraitUp]));
+              Navigator.of(context).pushNamed('/setting').then((value) {
+                // print("test");
+                SystemChrome.setPreferredOrientations(
+                    [DeviceOrientation.portraitUp]);
+              });
             },
             child: Icon(Icons.add),
           ),
@@ -138,5 +128,3 @@ class _HistoryPageState extends State<HistoryPage> {
     }
   }
 }
-
-//.then((value) {SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);})
