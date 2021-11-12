@@ -7,18 +7,17 @@ class GameCounter with ChangeNotifier {
   int _leftScore = 0;
   int _rightPoint = 0;
   int _rightScore = 0;
-  DateTime _nowDate = DateTime.now();
+  // var _nowDate = DateTime.now().toString();
+  bool timerState = true;
+  // var end_time = DateTime.now().toString();
+  int currentDay = DateTime.now().day;
+  int currentMonth = DateTime.now().month;
+  int currentYear = DateTime.now().year;
 
   int get getLeftPoint => _leftPoint;
   int get getLeftScore => _leftScore;
   int get getRightPoint => _rightPoint;
   int get getRightScore => _rightScore;
-
-  void loadData() async {
-    // var matches = DB_Helper().getScore();
-
-    // print(matches);
-  }
 
   void saveData(String minutes, String seconds) async {
     Score result = Score(
@@ -26,16 +25,17 @@ class GameCounter with ChangeNotifier {
       rightScore: _rightScore,
       minutes: minutes,
       seconds: seconds,
+      day: currentDay,
+      month: currentMonth,
+      year: currentYear,
     );
     // List<Score> listOfScore = [result];
     // return await DB_Helper().insertScore(listOfScore);
     // print("saveDataProvider : $result");
-
     await DB_Helper().insertScore(result);
   }
 
   void increPoint(String team) {
-    print(_nowDate);
     if (team == "left") {
       _leftPoint++;
     } else if (team == "right") {

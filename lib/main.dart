@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIOverlays([]);
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Badminton App',
       theme: ThemeData(
         primaryColor: Colors.black,
       ),

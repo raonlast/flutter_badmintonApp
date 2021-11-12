@@ -5,24 +5,37 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Score {
+  int? id;
   int leftScore;
   int rightScore;
   String minutes;
   String seconds;
+  int day;
+  int month;
+  int year;
+  // String? datetime;
 
   Score({
+    this.id,
     required this.leftScore,
     required this.rightScore,
     required this.minutes,
     required this.seconds,
+    required this.day,
+    required this.month,
+    required this.year,
   });
 
   Map<String, Object?> toMap() {
     return {
+      'id': id,
       'leftScore': leftScore,
       'rightScore': rightScore,
       'minutes': minutes,
       'seconds': seconds,
+      'day': day,
+      'month': month,
+      'year': year,
     };
   }
 
@@ -53,28 +66,48 @@ class DB_Helper {
 
   Future<Database> get database async {
     if (_db != null) return _db;
-    _db = openDatabase(join(await getDatabasesPath(), 'score.db'),
-        onCreate: (db, version) => _createDb(db), version: 1);
+    _db = openDatabase(join(await getDatabasesPath(), 'badminton.db'),
+        onCreate: (db, version) async {
+      await db.execute(
+        "CREATE TABLE badminton(id INTEGER PRIMARY KEY AUTOINCREMENT, leftScore INTEGER, rightScore INTEGER, minutes TEXT, seconds TEXT, day INTEGER, month INTEGER, year INTEGER)",
+      );
+    }, version: 1);
     return _db;
   }
 
-  static void _createDb(Database db) {
-    db.execute(
-      "CREATE TABLE score(id INTEGER PRIMARY KEY AUTOINCREMENT, leftScore INTEGER, rightScore INTEGER, minutes TEXT, seconds TEXT)",
-    );
+  Future<Database> initializeDB() async {
+    String path = await getDatabasesPath();
+    return openDatabase(join(path, 'badminton.db'), version: 1,
+        onCreate: (database, version) async {
+      await database.execute(
+          "CREATE TABLE badminton(id INTEGER PRIMARY KEY AUTOINCREMENT, leftScore INTEGER, rightScore INTEGER, minutes TEXT, seconds TEXT, day INTEGER, month INTEGER, year INTEGER)");
+    });
   }
+
+  // Future<dynamic> alterTable(String ColumnName) async {
+  //   final db = await database;
+  //   var count =
+  //       await db.execute("ALTER TABLE score ADD COLUMN $ColumnName TEXT");
+  //   print(await db.query('score'));
+  //   return count;
+  // }
 
   Future<List<Score>> getScore() async {
     final db = await database;
-
-    final List<Map<String, dynamic>> maps = await db.query('score');
+    final List<Map<String, dynamic>> maps = await db.query('badminton');
 
     return List.generate(maps.length, (index) {
       return Score(
+        id: maps[index]['id'],
         leftScore: maps[index]['leftScore'],
         rightScore: maps[index]['rightScore'],
         minutes: maps[index]['minutes'],
         seconds: maps[index]['seconds'],
+        day: maps[index]['day'],
+        month: maps[index]['month'],
+        year: maps[index]['year'],
+
+        // end_time: maps[index]['endTime'],
       );
     });
   }
@@ -82,26 +115,24 @@ class DB_Helper {
   Future<void> insertScore(Score score) async {
     final db = await database;
 
-    await db.insert('score', score.toMap(),
+    await db.insert('badminton', score.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<void> deleteScore(int id) async {
+    final db = await database;
+
+    await db.delete('badminton', where: 'id=?', whereArgs: [id]);
   }
 
   Future<void> deleteAll() async {
     final db = await database;
 
-    await db.delete('score').then((value) => print("delete All"));
+    await db.delete('badminton').then((value) => print("delete All"));
   }
 } //DB_helper
 
 // class DB_Helper {
-//   Future<Database> initializeDB() async {
-//     String path = await getDatabasesPath();
-//     return openDatabase(join(path, 'score.db'),
-//         onCreate: (database, version) async {
-//       await database.execute(
-//           "CREATE TABLE score(id INTEGER PRIMARY KEY AUTOINCREMENT, leftScore INTEGER, rightScore INTEGER, minutes TEXT, seconds TEXT)");
-//     });
-//   }
 
 //   Future<int> insertScore(List<Score> scores) async {
 //     int result = 0;
