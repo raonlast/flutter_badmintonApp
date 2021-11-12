@@ -4,6 +4,7 @@ import 'package:flutter_application_1/providers/gameCounter.dart';
 import 'package:flutter_application_1/providers/gameSetting.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -16,13 +17,27 @@ class _SettingPageState extends State<SettingPage> {
   int maxScore = 0;
   int maxPoint = 0;
 
+  void spTest() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getStringList("timer");
+    print(data);
+  }
+
+  @override
+  void initState() {
+    spTest();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // MediaQuery.of(context).orientation.toString();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
 
-    print("settingPage");
+    bool _isChecked = false;
+
+    // print("settingPage");
     // print(context.read<GameSetting>().getScore);
     // print(Provider.of<GameSetting>(context).getScore);
 
@@ -130,6 +145,15 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ],
         ),
+        // Container(
+        //   child: Checkbox(
+        //     // checkColor: Colors.white,
+        //     value: true,
+        //     onChanged: (value) {
+        //       print(value);
+        //     },
+        //   ),
+        // ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.navigate_next),

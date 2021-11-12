@@ -4,9 +4,12 @@ class GameSetting with ChangeNotifier {
   //최소 변경
   int _maxPoint = 5;
   int _maxScore = 1;
+  bool _isDeuce = false;
+
 
   int get getPoint => _maxPoint;
   int get getScore => _maxScore;
+  bool get getDeuce => _isDeuce;
 
   void increMaxPoint() {
     if (_maxPoint < 25) {
@@ -47,6 +50,16 @@ class GameSetting with ChangeNotifier {
   void resetAll() {
     _maxPoint = 5;
     _maxScore = 1;
+    notifyListeners();
+  }
+
+  void deuce() {
+    _isDeuce = true;
+    notifyListeners();
+  }
+
+  void notDeuce() {
+    _isDeuce = false;
     notifyListeners();
   }
 }

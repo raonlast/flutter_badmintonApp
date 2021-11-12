@@ -85,11 +85,11 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     child: Text("LOGIN"),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  HistoryPage()));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (BuildContext context) =>
+                      //             HistoryPage()));
                     },
                   ),
                 ),

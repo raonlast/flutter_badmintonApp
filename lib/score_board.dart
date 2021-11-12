@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/db/db.dart';
+import 'package:flutter_application_1/history_page.dart';
 import 'package:flutter_application_1/providers/gameCounter.dart';
 import 'package:flutter_application_1/providers/gameSetting.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 class ScoreBoard extends StatefulWidget {
@@ -13,18 +16,29 @@ class ScoreBoard extends StatefulWidget {
 }
 
 class _ScoreBoardState extends State<ScoreBoard> {
-  Timer? _timer;
+  //Timer 변수들
+  Timer? _secondTimer;
+  Timer? _minuteTimer;
   int _seconds = 0;
   int _minutes = 0;
   String _secondResult = "00";
   String _minuteResult = "00";
   bool _isPlaying = false;
-  // List<String> _saveTimes = [];
+
+  int maxScore = 0;
+  int maxPoint = 0;
+  int leftScore = 0;
+  int leftPoint = 0;
+  int rightScore = 0;
+  int rightPoint = 0;
 
   @override
   void initState() {
+    super.initState();
+    // _loadCounter();
+
     if (!_isPlaying) {
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _secondTimer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (_seconds < 9) {
           setState(() {
             _seconds++;
@@ -46,15 +60,25 @@ class _ScoreBoardState extends State<ScoreBoard> {
           _seconds = 0;
         }
       });
+      // _minuteTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+      //   if (_minutes < 9)
+      // });
+
       _isPlaying = !_isPlaying;
     }
-    super.initState();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _secondTimer?.cancel();
     super.dispose();
+  }
+
+  _updateTimer() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var timer = (prefs.getStringList('timer') ?? []);
+    print('time is $timer');
+    await prefs.setStringList('timer', [_minuteResult, _secondResult]);
   }
 
   @override
@@ -71,30 +95,11 @@ class _ScoreBoardState extends State<ScoreBoard> {
     int rightScore = Provider.of<GameCounter>(context).getRightScore;
     int rightPoint = Provider.of<GameCounter>(context).getRightPoint;
 
-    //최대 점수가 되었을 때
-    // point가 over되었을 때 바로 끝나지 않는 이슈 발견
-    // if (leftPoint == maxPoint) {
-    //   context.read<GameCounter>().increScore("left");
-    //   context.read<GameCounter>().clearPoint("left");
-    // }
-    // if (rightPoint == maxPoint) {
-    //   context.read<GameCounter>().increScore("right");
-    //   context.read<GameCounter>().clearPoint("right");
-    // }
-
-    //점수 또는 스코어가 0이하로 내려갈 때
-    // if (leftPoint < 0)
-    //   context.watch<GameCounter>().underPoint(maxPoint, "left");
-    // if (leftScore < 0)
-    //   context.watch<GameCounter>().underScore(maxScore, "left");
-    // if (rightPoint < 0)
-    //   context.watch<GameCounter>().underPoint(maxPoint, "right");
-    // if (rightScore < 0)
-    //   context.watch<GameCounter>().underScore(maxScore, "right");
+    bool isDeuce = Provider.of<GameSetting>(context).getDeuce;
+    int deuceMaxPoint = maxPoint;
 
     //최대 스코어에 도달할 때 => 우승
     if (maxScore == leftScore) {
-      print("도달");
       return Center(
         child: AlertDialog(
           title: Text("왼쪽팀 승리 !"),
@@ -103,8 +108,16 @@ class _ScoreBoardState extends State<ScoreBoard> {
               onPressed: () => {
                 // UX를 고려해 max 세트, 점수는 초기화 X
                 // context.read<GameSetting>().resetAll(),
+                // DB_helper().insertScor
+                context
+                    .read<GameCounter>()
+                    .saveData(_minuteResult, _secondResult),
+                _updateTimer(),
                 context.read<GameCounter>().resetAll(),
-                Navigator.pop(context, 'Cancel'),
+                // Navigator.pop(context, 'Cancel'),
+                Navigator.pushReplacementNamed(context, '/').then((value) =>
+                    SystemChrome.setPreferredOrientations(
+                        [DeviceOrientation.portraitUp]))
               },
               child: Text("돌아가기"),
             ),
@@ -121,8 +134,14 @@ class _ScoreBoardState extends State<ScoreBoard> {
               onPressed: () => {
                 // UX를 고려해 max 세트, 점수는 초기화 X
                 // context.read<GameSetting>().resetAll(),
+                context
+                    .read<GameCounter>()
+                    .saveData(_minuteResult, _secondResult),
+                _updateTimer(),
                 context.read<GameCounter>().resetAll(),
-                Navigator.pop(context, 'Cancel'),
+                Navigator.pushReplacementNamed(context, '/').then((value) =>
+                    SystemChrome.setPreferredOrientations(
+                        [DeviceOrientation.portraitUp]))
               },
               child: Text("돌아가기"),
             ),
@@ -180,14 +199,26 @@ class _ScoreBoardState extends State<ScoreBoard> {
                         onTap: () {
                           //경기 시간 타이머가 pause가 되면 점수 카운트 불가하도록
                           if (_isPlaying) {
-                            if (leftPoint == maxPoint ||
-                                rightPoint == maxPoint) {
-                              context.read<GameCounter>().resetPoint();
+                            if (isDeuce == true) {
+                              if (leftPoint == deuceMaxPoint - 1) {
+                                context.read<GameCounter>().increScore("left");
+                                context.read<GameCounter>().resetPoint();
+                                context.read<GameSetting>().notDeuce();
+                              } else {
+                                context.read<GameCounter>().increPoint("left");
+                              }
+                              return;
+                            }
+                            if (leftPoint == maxPoint - 1 &&
+                                rightPoint == maxPoint - 1) {
+                              context.read<GameSetting>().deuce();
+                              context.read<GameCounter>().increPoint("left");
+                              deuceMaxPoint++;
                               return;
                             }
                             if (leftPoint == maxPoint - 1) {
                               context.read<GameCounter>().increScore("left");
-                              context.read<GameCounter>().increPoint("left");
+                              context.read<GameCounter>().resetPoint();
                             } else {
                               context.read<GameCounter>().increPoint("left");
                             }
@@ -354,7 +385,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
                     iconSize: 40,
                     onPressed: () {
                       if (_isPlaying == true) {
-                        _timer?.cancel();
+                        _secondTimer?.cancel();
                         _isPlaying = !_isPlaying;
                       }
                     }),
@@ -363,7 +394,8 @@ class _ScoreBoardState extends State<ScoreBoard> {
                     iconSize: 40,
                     onPressed: () {
                       if (_isPlaying == false) {
-                        _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+                        _secondTimer =
+                            Timer.periodic(Duration(seconds: 1), (timer) {
                           if (_seconds < 9) {
                             setState(() {
                               _seconds++;
@@ -442,16 +474,27 @@ class _ScoreBoardState extends State<ScoreBoard> {
                       onTap: () {
                         // _pointCounter("right", "incre");
                         if (_isPlaying) {
-                          if (rightPoint == maxPoint || leftPoint == maxPoint) {
-                            context.read<GameCounter>().resetPoint();
+                          if (leftPoint == maxPoint - 1 &&
+                              rightPoint == maxPoint - 1) {
+                            context.read<GameSetting>().deuce();
                             return;
                           }
                           if (rightPoint == maxPoint - 1) {
                             context.read<GameCounter>().increScore("right");
-                            context.read<GameCounter>().increPoint("right");
+                            context.read<GameCounter>().resetPoint();
                           } else {
                             context.read<GameCounter>().increPoint("right");
                           }
+                          // if (rightPoint == maxPoint || leftPoint == maxPoint) {
+                          //   context.read<GameCounter>().resetPoint();
+                          //   return;
+                          // }
+                          // if (rightPoint == maxPoint - 1) {
+                          //   context.read<GameCounter>().increScore("right");
+                          //   context.read<GameCounter>().increPoint("right");
+                          // } else {
+                          //   context.read<GameCounter>().increPoint("right");
+                          // }
                         }
                       },
                       child: Container(
