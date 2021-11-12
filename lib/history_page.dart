@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/db/db.dart';
+import 'package:flutter_application_1/setting.dart';
 import 'package:flutter_application_1/setting_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/providers/gameCounter.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:timeago/timeago.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -40,6 +42,9 @@ class _HistoryPageState extends State<HistoryPage> {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setEnabledSystemUIOverlays([]);
 
+    // final fifteenago = new DateTime.now().subtract(new Duration(minutes: 15));
+    // print(timeago.for)
+
     if (!loading) {
       return Container(
         child: Scaffold(
@@ -69,8 +74,22 @@ class _HistoryPageState extends State<HistoryPage> {
                             itemCount: snapshot.data?.length,
                             itemBuilder: (context, int index) {
                               // final item = data[index];
-                              print(data[index].toMap());
+                              // print(data[index].toMap());
                               return Dismissible(
+                                background: Container(
+                                  color: Colors.red,
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    margin: EdgeInsets.only(right: 20),
+                                    child: Text(
+                                      "Delete",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                  ),
+                                ),
                                 key: UniqueKey(),
                                 onDismissed: (direction) async {
                                   await dbHelper.deleteScore(data[index].id!);
@@ -95,7 +114,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                         Text(
                                             "${data[index].minutes}m ${data[index].seconds}s"),
                                         Text(
-                                            "${data[index].year}/${data[index].month}/${data[index].day}")
+                                            "${data[index].year}/${data[index].month}/${data[index].day}"),
+                                        // Text("data")
                                       ],
                                     ),
                                   ),
@@ -110,13 +130,19 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ),
           ),
-
           floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.black,
             onPressed: () {
-              Navigator.of(context).pushNamed('/setting').then((value) {
-                // print("test");
+              Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => Setting()))
+                  .then((value) {
                 SystemChrome.setPreferredOrientations(
                     [DeviceOrientation.portraitUp]);
+                setState(() {
+                  getList = dbHelper.getScore();
+                });
               });
             },
             child: Icon(Icons.add),

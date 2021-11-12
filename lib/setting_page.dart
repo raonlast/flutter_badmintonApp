@@ -41,129 +41,130 @@ class _SettingPageState extends State<SettingPage> {
     // print(context.read<GameSetting>().getScore);
     // print(Provider.of<GameSetting>(context).getScore);
 
-    return Scaffold(
-      body: Container(
-        color: Colors.grey,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                    icon: Icon(Icons.add_circle_outlined),
-                    iconSize: 50,
-                    onPressed: () {
-                      context.read<GameSetting>().increMaxScore();
-                    }),
-                Row(
-                  children: [
-                    Card(
-                      color: Colors.white,
-                      elevation: 6.0,
-                      child: SizedBox(
-                        width: 120,
-                        height: 150,
-                        child: Center(
-                            child: Text(
-                          context.watch<GameSetting>().getScore.toString(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
+    return Container(
+      color: Colors.grey,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                  icon: Icon(Icons.add_circle_outlined),
+                  iconSize: 50,
+                  onPressed: () {
+                    context.read<GameSetting>().increMaxScore();
+                  }),
+              Row(
+                children: [
+                  Card(
+                    color: Colors.white,
+                    elevation: 6.0,
+                    child: SizedBox(
+                      width: 120,
+                      height: 150,
+                      child: Center(
+                          child: Text(
+                        context.watch<GameSetting>().getScore.toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 90,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      )),
+                    ),
+                  ),
+                  Text(
+                    "Set",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              IconButton(
+                icon: Icon(Icons.remove_circle_outlined),
+                iconSize: 50,
+                onPressed: () {
+                  context.read<GameSetting>().decreMaxScore();
+                },
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                  icon: Icon(Icons.add_circle_outlined),
+                  iconSize: 50,
+                  onPressed: () {
+                    context.read<GameSetting>().increMaxPoint();
+                  }),
+              Row(
+                children: [
+                  Card(
+                    color: Colors.white,
+                    elevation: 6.0,
+                    child: SizedBox(
+                      width: 120,
+                      height: 150,
+                      child: Center(
+                          child: Text(
+                        context.watch<GameSetting>().getPoint.toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
                             fontSize: 90,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        )),
-                      ),
+                            color: Colors.black),
+                      )),
                     ),
-                    Text(
-                      "Set",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  Text(
+                    "Point",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-                IconButton(
-                  icon: Icon(Icons.remove_circle_outlined),
-                  iconSize: 50,
-                  onPressed: () {
-                    context.read<GameSetting>().decreMaxScore();
-                  },
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                    icon: Icon(Icons.add_circle_outlined),
-                    iconSize: 50,
-                    onPressed: () {
-                      context.read<GameSetting>().increMaxPoint();
-                    }),
-                Row(
-                  children: [
-                    Card(
-                      color: Colors.white,
-                      elevation: 6.0,
-                      child: SizedBox(
-                        width: 120,
-                        height: 150,
-                        child: Center(
-                            child: Text(
-                          context.watch<GameSetting>().getPoint.toString(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 90,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        )),
-                      ),
-                    ),
-                    Text(
-                      "Point",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  icon: Icon(Icons.remove_circle_outlined),
-                  iconSize: 50,
-                  onPressed: () {
-                    context.read<GameSetting>().decreMaxPoint();
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-        // Container(
-        //   child: Checkbox(
-        //     // checkColor: Colors.white,
-        //     value: true,
-        //     onChanged: (value) {
-        //       print(value);
-        //     },
-        //   ),
-        // ),
+                  ),
+                ],
+              ),
+              IconButton(
+                icon: Icon(Icons.remove_circle_outlined),
+                iconSize: 50,
+                onPressed: () {
+                  context.read<GameSetting>().decreMaxPoint();
+                },
+              ),
+            ],
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.navigate_next),
-        backgroundColor: Colors.black,
-        onPressed: () {
-          Navigator.push(context,
-                  MaterialPageRoute(builder: (BuildContext context) => Board()))
-              .then((value) => context.read<GameCounter>().resetAll());
-        },
-      ),
+      // Container(
+      //   child: Checkbox(
+      //     // checkColor: Colors.white,
+      //     value: true,
+      //     onChanged: (value) {
+      //       print(value);
+      //     },
+      //   ),
+      // ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.navigate_next),
+      //   backgroundColor: Colors.black,
+      //   onPressed: () {
+      //     Navigator.push(context,
+      //             MaterialPageRoute(builder: (BuildContext context) => Board()))
+      //         .then((value) {
+      //           print("setting_page");
+      //           context.read<GameCounter>().resetAll();
+      //           });
+      //   },
+      // ),
     );
   }
 }

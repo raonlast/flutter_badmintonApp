@@ -61,7 +61,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
           _minutes++;
         });
       }
-      if (_seconds < 10) {
+      if (_seconds < 9) {
         setState(() {
           _seconds++;
           _secondResult = "0$_seconds";
@@ -77,7 +77,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
           _seconds = -1;
         });
       }
-      if (_minutes < 9) {
+      if (_minutes < 10) {
         _minuteResult = "0$_minutes";
       } else {
         _minuteResult = "$_minutes";
@@ -159,9 +159,10 @@ class _ScoreBoardState extends State<ScoreBoard> {
                 _updateTimer(),
                 context.read<GameCounter>().resetAll(),
                 // Navigator.popUntil(context, (route) => route.isFirst),
-                Navigator.pushReplacementNamed(context, '/').then((value) =>
-                    SystemChrome.setPreferredOrientations(
-                        [DeviceOrientation.portraitUp]))
+                // Navigator.pushReplacementNamed(context, '/').then((value) =>
+                //     SystemChrome.setPreferredOrientations(
+                //         [DeviceOrientation.portraitUp]))
+                Navigator.popUntil(context, ModalRoute.withName('/')),
               },
               child: Text("돌아가기"),
             ),
@@ -208,7 +209,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
                               // '$_leftPointScore',
                               textAlign: TextAlign.center,
                               style: const TextStyle(
-                                  fontSize: 150,
+                                  fontSize: 130,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
                             ),
@@ -455,7 +456,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
                                 .toString(),
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                                fontSize: 150,
+                                fontSize: 130,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ),
